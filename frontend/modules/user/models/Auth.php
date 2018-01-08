@@ -1,8 +1,9 @@
 <?php
 
-namespace frontend\models;
+namespace frontend\modules\user\models;
 
 use Yii;
+use frontend\models\User;
 
 /**
  * This is the model class for table "auth".
@@ -16,6 +17,7 @@ use Yii;
  */
 class Auth extends \yii\db\ActiveRecord
 {
+
     /**
      * @inheritdoc
      */
@@ -57,4 +59,5 @@ class Auth extends \yii\db\ActiveRecord
     {
         return $this->hasOne(User::className(), ['id' => 'user_id']);
     }
+
 }
