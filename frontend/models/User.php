@@ -31,8 +31,8 @@ class User extends ActiveRecord implements IdentityInterface
 
     const STATUS_DELETED = 0;
     const STATUS_ACTIVE = 10;
-    
     const DEFAULT_IMAGE = '/img/profile_default_picture.jpg';
+
     /**
      * @inheritdoc
      */
@@ -280,33 +280,31 @@ class User extends ActiveRecord implements IdentityInterface
         $ids = $redis->sinter($key1, $key2);
         return User::find()->select('id, username, nickname')->where(['id' => $ids])->orderBy('username')->asArray()->all();
     }
-    
+
     /**
      * Get profile picture
      * @return string
      */
     public function getPicture()
     {
-        if($this->picture)
+        if ($this->picture)
         {
             return Yii::$app->storage->getFile($this->picture);
         }
         return self::DEFAULT_IMAGE;
     }
-    
+
     /**
-     * 
+     * Delete picture from user record and file system
      * @return boolean
      */
-    public function deleteImage()
+    public function deletePicture()
     {
-        if($this->picture)
+        if ($this->picture && Yii::$app->storage->deleteFile($this->picture))
         {
             $this->picture = null;
-            
             return $this->save(false, ['picture']);
         }
-        
         return false;
     }
 

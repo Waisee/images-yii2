@@ -6,7 +6,6 @@ use Yii;
 use yii\base\Component;
 use yii\web\UploadedFile;
 use yii\helpers\FileHelper;
-use Intervention\Image\ImageManager;
 
 /**
  * File storage compoment
@@ -29,7 +28,6 @@ class Storage extends Component implements StorageInterface
 
         if ($path && $file->saveAs($path))
         {
-            $this->resizeImage($path);
 
             return $this->fileName;
         }
@@ -43,10 +41,10 @@ class Storage extends Component implements StorageInterface
     protected function preparePath(UploadedFile $file)
     {
         $this->fileName = $this->getFileName($file);
-        //     0c/a9/277f91e40054767f69afeb0426711ca0fddd.jpg
+//     0c/a9/277f91e40054767f69afeb0426711ca0fddd.jpg
 
         $path = $this->getStoragePath() . $this->fileName;
-        //     /var/www/project/frontend/web/uploads/0c/a9/277f91e40054767f69afeb0426711ca0fddd.jpg
+//     /var/www/project/frontend/web/uploads/0c/a9/277f91e40054767f69afeb0426711ca0fddd.jpg
 
         $path = FileHelper::normalizePath($path);
         if (FileHelper::createDirectory(dirname($path)))
@@ -61,7 +59,7 @@ class Storage extends Component implements StorageInterface
      */
     protected function getFilename(UploadedFile $file)
     {
-        // $file->tempname   -   /tmp/qio93kf
+// $file->tempname   -   /tmp/qio93kf
 
         $hash = sha1_file($file->tempName); // 0ca9277f91e40054767f69afeb0426711ca0fddd
 
@@ -89,23 +87,18 @@ class Storage extends Component implements StorageInterface
     }
 
     /**
-     * 
-     * @param string $path
+     * @param string $filename
      * @return boolean
      */
-    protected function resizeImage($path)
+    public function deleteFile(string $filename)
     {
+        $file = $this->getStoragePath() . $filename;
 
-        $size = getimagesize($path);
-        
-        if ($size[0] > 1280 || $size[1] > 1024)
+        if (file_exists($file))
         {
-            $manager = new ImageManager(array('driver' => 'imagick'));
-
-            $manager->make($path)->resize(1280, 1024)->save($path);
+            // Если файл существует, удаляем
+            // Файла нет - хорошо. И удалять не нужно
             return true;
         }
-        return false;
     }
-
 }

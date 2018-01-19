@@ -105,13 +105,25 @@ class ProfileController extends Controller
 
         return $this->redirect(['/user/profile/view', 'nickname' => $user->getNickname()]);
     }
-    
-    public function actionDeleteImage()
+
+    public function actionDeletePicture()
     {
+        if (Yii::$app->user->isGuest)
+        {
+            return $this->redirect(['/user/default/login']);
+        }
+
+        /* @var $currentUser User */
         $currentUser = Yii::$app->user->identity;
-        
-        $currentUser->deleteImage();
-        
+
+        if ($currentUser->deletePicture())
+        {
+            Yii::$app->session->setFlash('success', 'Picture deleted');
+        } else
+        {
+            Yii::$app->session->setFlash('danger', 'Error occured');
+        }
+
         return $this->redirect(['/user/profile/view', 'nickname' => $currentUser->getNickname()]);
     }
 
@@ -130,35 +142,4 @@ class ProfileController extends Controller
         throw new NotFoundHttpException();
     }
 
-//    private function checkUserSubscribeYourself($id)
-//    {
-//        $currentUser = Yii::$app->user->identity;
-//
-//        $user = $this->findUserById($id);
-//        
-//        if ($user->getId() != $currentUser->getId()){
-//            return true;
-//        }
-//        return false;
-//        
-//    }
-//    public function actionGenerate()
-//    {
-//        $faker = \Faker\Factory::create();
-//        
-//        for ($i = 0; $i <10; $i++)
-//        {
-//            $user = new User([
-//                'username' => $faker->name,
-//                'email' => $faker->email,
-//                'about' => $faker->text(200),
-//                'nickname' => $faker->regexify('[A-Za-z0-9_]{5,15}'),
-//                'auth_key' => Yii::$app->security->generateRandomString(),
-//                'password_hash' => Yii::$app->security->generateRandomString(),
-//                'created_at' => $time = time(),
-//                'updated_at' => $time,
-//            ]);
-//            $user->save(false);
-//        }
-//    }
 }
