@@ -18,15 +18,19 @@ class PictureForm extends Model
     {
         return [
             [['picture'], 'file',
+                'maxSize' => $this->getMaxFileSize(),
                 'extensions' => ['jpg'],
                 'checkExtensionByMimeType' => true
             ],
         ];
     }
 
-    public function save()
+    /**
+     * @return integer
+     */
+    public function getMaxFileSize()
     {
-        return 1;
+        return Yii::$app->params['maxFileSize'];
     }
 
 }

@@ -8,6 +8,7 @@ use frontend\models\User;
 use yii\web\NotFoundHttpException;
 use frontend\modules\user\models\forms\PictureForm;
 use yii\web\UploadedFile;
+use yii\web\Response;
 
 class ProfileController extends Controller
 {
@@ -16,8 +17,8 @@ class ProfileController extends Controller
     {
         /* @var $currentUser User */
         $currentUser = Yii::$app->user->identity;
-        
-        $modelPicture = new PictureForm(); 
+
+        $modelPicture = new PictureForm();
 
         return $this->render('view', [
                     'user' => $this->findUser($nickname),
@@ -25,25 +26,29 @@ class ProfileController extends Controller
                     'modelPicture' => $modelPicture,
         ]);
     }
-    
+
     public function actionUploadPicture()
     {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
         $model = new PictureForm();
         $model->picture = UploadedFile::getInstance($model, 'picture');
-        
+
         if ($model->validate())
         {
             $user = Yii::$app->user->identity;
-            
-            $user->picture = Yii::$app->storage->saveUploadedFile($model->picture);
-            
-            if($user->save(false, ['picture']))
-            {
-                print_r($user->attributes);die;
-            }
 
+            $user->picture = Yii::$app->storage->saveUploadedFile($model->picture);
+
+            if ($user->save(false, ['picture']))
+            {
+                return [
+                    'success' => true,
+                    'pictureUri' => Yii::$app->storage->getFile($user->picture),
+                ];
+            }
         }
-             
+        return ['success' => false, 'errors' => $model->getErrors()];
     }
 
     /**
@@ -72,7 +77,7 @@ class ProfileController extends Controller
         $currentUser = Yii::$app->user->identity;
 
         $user = $this->findUserById($id);
-        
+
         if ($user->getId() != $currentUser->getId())
         {
             $currentUser->followUser($user);
@@ -92,13 +97,22 @@ class ProfileController extends Controller
         $currentUser = Yii::$app->user->identity;
 
         $user = $this->findUserById($id);
-        
+
         if ($user->getId() != $currentUser->getId())
         {
             $currentUser->unfollowUser($user);
         }
 
         return $this->redirect(['/user/profile/view', 'nickname' => $user->getNickname()]);
+    }
+    
+    public function actionDeleteImage()
+    {
+        $currentUser = Yii::$app->user->identity;
+        
+        $currentUser->deleteImage();
+        
+        return $this->redirect(['/user/profile/view', 'nickname' => $currentUser->getNickname()]);
     }
 
     /**
