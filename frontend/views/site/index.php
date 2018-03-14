@@ -44,7 +44,13 @@ $this->title = 'My Yii Application';
                         Like&nbsp;&nbsp;<span class="glyphicon glyphicon-thumbs-up"></span>
                     </a>
                 </div>
-
+                <div class="col-md-12">
+                    <?php if ($countComment = $feedItem->countComments()): ?>
+                        Comments: <span class="comments-count"><?php echo $countComment; ?></span> 
+                    <?php else: ?>
+                        Comments: <span class="comments-count"><?php echo 0; ?></span>
+                    <?php endif; ?>
+                </div>
             </div>    
             <div class="col-md-12"><hr/></div>            
         <?php endforeach; ?>

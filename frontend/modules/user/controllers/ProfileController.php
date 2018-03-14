@@ -19,11 +19,17 @@ class ProfileController extends Controller
         $currentUser = Yii::$app->user->identity;
 
         $modelPicture = new PictureForm();
+        
+        $user = $this->findUser($nickname);
+        
+        $limit = Yii::$app->params['profilePostLimit'];
+        $posts = $user->getPosts($limit);
 
         return $this->render('view', [
-                    'user' => $this->findUser($nickname),
+                    'user' => $user,
                     'currentUser' => $currentUser,
                     'modelPicture' => $modelPicture,
+                    'posts' => $posts,
         ]);
     }
 

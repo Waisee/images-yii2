@@ -20,6 +20,7 @@ use frontend\models\Post;
  */
 class Comment extends ActiveRecord
 {
+
     public function behaviors()
     {
         return [
@@ -32,7 +33,7 @@ class Comment extends ActiveRecord
             ],
         ];
     }
-    
+
     /**
      * @inheritdoc
      */
@@ -40,7 +41,7 @@ class Comment extends ActiveRecord
     {
         return 'comment';
     }
-   
+
     /**
      * @inheritdoc
      */
@@ -55,7 +56,7 @@ class Comment extends ActiveRecord
             'updated_at' => 'Updated At',
         ];
     }
-    
+
     /**
      * Get author of the comment
      * @return User||null
@@ -64,14 +65,21 @@ class Comment extends ActiveRecord
     {
         return $this->hasOne(User::className(), ['id' => 'user_id']);
     }
-    
+
     /**
      * Get post where comment was written
      * @return Post||null
      */
     public function getPost()
     {
-        return $this->hasOne(Post::className(), ['id' => 'post_id']);
+        return $this->hasOne(Post::className(), ['id' => 'post_id'])->one();
     }
-    
+
+    public function afterSave($insert, $changedAttributes)
+    {
+        parent::afterSave($insert, $changedAttributes);
+        $post = $this->getPost();
+        $post->commentCountIncrement();
+    }
+
 }

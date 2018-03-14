@@ -307,6 +307,7 @@ class User extends ActiveRecord implements IdentityInterface
         }
         return false;
     }
+
     /**
      * Get data for newsfeed
      * @param int $limit
@@ -317,7 +318,7 @@ class User extends ActiveRecord implements IdentityInterface
         $order = ['post_created_at' => SORT_DESC];
         return $this->hasMany(Feed::className(), ['user_id' => 'id'])->orderBy($order)->limit($limit)->all();
     }
-    
+
     /**
      * Check whether currnet user likes post with given id
      * @param int $postId
@@ -329,4 +330,16 @@ class User extends ActiveRecord implements IdentityInterface
         $redis = Yii::$app->redis;
         return $redis->sismember("user:{$this->getId()};likes", $postId);
     }
+
+    /**
+     * Get posts for profile page
+     * @param int $limit
+     * @return array
+     */
+    public function getPosts(int $limit)
+    {
+        $order = ['created_at' => SORT_DESC];
+        return $this->hasMany(Post::className(), ['user_id' => 'id'])->orderBy($order)->limit($limit)->all();
+    }
+
 }

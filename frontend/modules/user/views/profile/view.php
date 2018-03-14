@@ -3,6 +3,7 @@
 /* @var $user frontend\models\user */
 /* @var $currentUser frontend\models\user */
 /* @var $modelPicture frontend\modules\user\models\forms\PictureForm  */
+/* @var $posts frontend\models\Post  */
 
 use Yii;
 use yii\helpers\Url;
@@ -65,7 +66,7 @@ use dosamigos\fileupload\FileUpload;
         <a href="<?php echo Url::to(['/user/profile/delete-picture']); ?>" class="btn btn-danger">Delete image</a>
         <hr>
         <h2>Your profile page</h2>
-    <?php endif ?>  
+    <?php endif ?>
 <?php endif ?>
 <hr>
 <!-- Button trigger modal -->
@@ -131,17 +132,18 @@ use dosamigos\fileupload\FileUpload;
         </div>
     </div>
 </div>
-
-<?php
-//echo 'getSubscriptions:';
-//echo '<pre>';
-//print_r($user->getSubscriptions());
-//echo '</pre>';
-//
-//echo '<br><hr>';
-//
-//echo 'getFollowers:';
-//echo '<pre>';
-//print_r($user->getFollowers());
-//echo '</pre>';
-//?>
+<?php if ($posts): ?>
+    <h3>Your posts:</h3>
+    <div class="row">
+        <?php foreach ($posts as $post): ?>
+            <div class="col-md-12">
+                <a href="<?php echo Url::to(['/post/default/view', 'id' => ($post->id)]); ?>">
+                    Post #<?php echo Html::encode($post->id); ?>
+                    <br>
+                    <?php echo Html::encode($post->description); ?>
+                    <br><br>
+                </a>
+            </div>
+        <?php endforeach; ?>
+    </div>
+<?php endif; ?> 

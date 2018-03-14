@@ -38,6 +38,13 @@ use yii\helpers\Url;
             </a>
 
         </div>
+        <div class="col-md-12">
+            <?php if($countComment = $post->countComments()): ?>
+            Comments: <span class="comments-count"><?php echo $countComment; ?></span> 
+            <?php else: ?>
+                Comments: <span class="comments-count"><?php echo 0; ?></span>
+            <?php endif; ?>
+        </div>
     </div>
     <div>
         <hr>
@@ -48,10 +55,10 @@ use yii\helpers\Url;
             <?php echo $comment->text_comment; ?>
             <?php if ($currentUser->id == $comment->user_id): ?>
 
-                <a href="<?php echo Url::to(['/post/default/edit', 'id' => $comment->id, 'post_id' => $post->getId()]); ?>" class="btn btn-info">Edit</a>            
+                <a href="<?php echo Url::to(['/post/default/edit-comment', 'id' => $comment->id, 'post_id' => $post->getId()]); ?>" class="btn btn-info">Edit</a>            
             <?php endif; ?>
             <?php if ($currentUser->id == $comment->post->user_id): ?>
-                <a href="<?php echo Url::to(['/post/default/delete', 'id' => $comment->id, 'post_id' => $post->getId()]); ?>" class="btn btn-danger">X</a>               
+                <a href="<?php echo Url::to(['/post/default/delete-comment', 'id' => $comment->id, 'post_id' => $post->getId()]); ?>" class="btn btn-danger">X</a>               
             <?php endif; ?>
             <hr>
         <?php endforeach; ?>
@@ -59,9 +66,7 @@ use yii\helpers\Url;
     <div>
         <h3>Write a comment</h3>
 
-        <?php $form = ActiveForm::begin(/* ['action' =>['post/default/comment'] */); ?>
-
-        <?php //echo $form->field($model, 'post_id')->hiddenInput(['value' => $post->id,])->label(false);  ?>
+        <?php $form = ActiveForm::begin(); ?>
 
         <?php echo $form->field($model, 'text_comment'); ?>
 

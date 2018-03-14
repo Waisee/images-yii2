@@ -35,9 +35,5 @@ class FeedService extends Component
             $feedItem->save();
 
         }
-//        echo '<pre>';
-//        print_r($followers);
-//        echo '</pre>';
     }
-
 }

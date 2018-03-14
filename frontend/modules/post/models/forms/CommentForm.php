@@ -34,7 +34,7 @@ class CommentForm extends Model
             [['text_comment'], 'string', 'max' => self::MAX_COMMENT_LENGHT],
         ];
     }
-    
+     
     public function save()
     {
         if ($this->validate())

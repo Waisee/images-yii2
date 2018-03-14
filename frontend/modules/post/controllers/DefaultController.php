@@ -134,27 +134,38 @@ class DefaultController extends Controller
         }
         throw new NotFoundHttpException();
     }
-
-    public function actionDelete($id, $post_id)
+/**
+ * Delete comment 
+ * @param integer $id
+ * @param integer $post_id
+ * @return string
+ * @throws NotFoundHttpException
+ */
+    public function actionDeleteComment($id, $post_id)
     {
         $comment = Comment::findOne($id);
         if ($comment->delete())
         {
+            $post = $this->findPost($post_id);
+            $post->commentCountDecrement();
             return $this->redirect(['/post/default/view', 'id' => $post_id]);
         }
         throw new NotFoundHttpException();
     }
-
-    public function actionEdit($id, $post_id)
+    
+/**
+ * Edit comment 
+ * @param integer $id
+ * @param integer $post_id
+ * @return string
+ * @throws NotFoundHttpException
+ */
+    public function actionEditComment($id, $post_id)
     {
         $comment = Comment::findOne($id);
         //$model = new CommentForm();
         if ($post = Yii::$app->request->post())
         {
-//            echo '<pre>';
-//            print_r($post['Comment']['text_comment']);
-//            echo '</pre>';
-//            die;
             $comment->text_comment = $post['Comment']['text_comment'];
             if ($comment->save())
             {

@@ -104,6 +104,36 @@ class Post extends ActiveRecord
         $redis = Yii::$app->redis;
         return $redis->scard("post:{$this->getId()}:likes");
     }
+    
+    /**
+     * Increments comment count by 1
+     */
+    public function commentCountIncrement()
+    {
+        /* @var $redis Connection */
+        $redis = Yii::$app->redis;
+        $redis->incr("post:{$this->getId()}:comments");
+    }
+    
+    /**
+     * Decrements comment count by 1
+     */
+    public function commentCountDecrement()
+    {
+        /* @var $redis Connection */
+        $redis = Yii::$app->redis;
+        $redis->decr("post:{$this->getId()}:comments");
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function countComments()
+    {
+        /* @var $redis Connection */
+        $redis = Yii::$app->redis;
+        return $redis->get("post:{$this->getId()}:comments");
+    }
 
     /**
      * Check whether given user liked current post
@@ -116,5 +146,4 @@ class Post extends ActiveRecord
         $redis = Yii::$app->redis;
         return $redis->sismember("post:{$this->getId()}:likes", $user->getId());
     }
-
 }
