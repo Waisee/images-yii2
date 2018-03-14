@@ -53,6 +53,9 @@ return [
         'storage' => [
             'class' => 'frontend\components\Storage',
         ],
+        'feedService' => [
+            'class' => 'frontend\components\FeedService',
+        ],
     ],
     'params' => $params,
 ];

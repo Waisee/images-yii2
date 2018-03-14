@@ -17,9 +17,17 @@ use frontend\modules\post\models\Comment;
  */
 class DefaultController extends Controller
 {
-
+    /**
+     * Renders the create view for the module
+     * @return string
+     */
     public function actionCreate()
     {
+        if(Yii::$app->user->isGuest)
+        {
+            return $this->redirect(['/user/default/login']);
+        }
+        
         $model = new PostForm(Yii::$app->user->identity);
 
         if ($model->load(Yii::$app->request->post()))
