@@ -50,7 +50,6 @@ $this->title = Html::encode($user->username);
                                 ?>
                                 <!--                                <a href="#" class="btn btn-default">Upload profile image</a>-->
                                 <a href="<?php echo Url::to(['/user/profile/delete-picture']); ?>" class="btn btn-danger">Delete image</a>
-                                <a href="#" class="btn btn-default">Edit profile</a>
                             <?php endif ?>
                             <br><br>
                             <div class="alert alert-success display-none" id="profile-image-success">Profile image updated</div>
@@ -74,15 +73,16 @@ $this->title = Html::encode($user->username);
                                             </a>
                                         </div>                
                                     <?php endforeach; ?>
-                                </div>
+                                </div><hr>
                             <?php endif ?>
-                            <hr>
+                            
                         <?php endif; ?>
                         <?php if ($user->about): ?>
                             <div class="profile-description">
-                                <p><?php echo HtmlPurifier::process($user->about); ?></p>
+                                <p><?php echo HtmlPurifier::process($user->about); ?></p><hr>
                             </div>
                         <?php endif; ?>
+                        
                         <div class="profile-bottom">
                             <div class="profile-post-count">
                                 <span><?php echo $user->getPostCount(); ?> posts</span>

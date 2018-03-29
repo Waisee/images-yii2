@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\components;
+namespace common\components;
 
 use Yii;
 use yii\base\Component;
@@ -83,7 +83,7 @@ class Storage extends Component implements StorageInterface
      */
     public function getFile(string $filename)
     {
-        return FileHelper::normalizePath(Yii::$app->params['storageUri'] . $filename);
+        return Yii::$app->params['storageUri'] . $filename;
     }
 
     /**

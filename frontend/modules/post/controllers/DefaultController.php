@@ -17,17 +17,18 @@ use frontend\modules\post\models\Comment;
  */
 class DefaultController extends Controller
 {
+
     /**
      * Renders the create view for the module
      * @return string
      */
     public function actionCreate()
     {
-        if(Yii::$app->user->isGuest)
+        if (Yii::$app->user->isGuest)
         {
             return $this->redirect(['/user/default/login']);
         }
-        
+
         $model = new PostForm(Yii::$app->user->identity);
 
         if ($model->load(Yii::$app->request->post()))
@@ -134,13 +135,14 @@ class DefaultController extends Controller
         }
         throw new NotFoundHttpException();
     }
-/**
- * Delete comment 
- * @param integer $id
- * @param integer $post_id
- * @return string
- * @throws NotFoundHttpException
- */
+
+    /**
+     * Delete comment 
+     * @param integer $id
+     * @param integer $post_id
+     * @return string
+     * @throws NotFoundHttpException
+     */
     public function actionDeleteComment($id, $post_id)
     {
         $comment = Comment::findOne($id);
@@ -152,14 +154,14 @@ class DefaultController extends Controller
         }
         throw new NotFoundHttpException();
     }
-    
-/**
- * Edit comment 
- * @param integer $id
- * @param integer $post_id
- * @return string
- * @throws NotFoundHttpException
- */
+
+    /**
+     * Edit comment 
+     * @param integer $id
+     * @param integer $post_id
+     * @return string
+     * @throws NotFoundHttpException
+     */
     public function actionEditComment($id, $post_id)
     {
         $comment = Comment::findOne($id);
@@ -177,6 +179,34 @@ class DefaultController extends Controller
         ]);
 
         throw new NotFoundHttpException();
+    }
+
+    public function actionComplain()
+    {
+        if (Yii::$app->user->isGuest)
+        {
+            return $this->redirect(['/user/default/login']);
+        }
+
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $id = Yii::$app->request->post('id');
+
+        /* @var $currentUser User */
+        $currentUser = Yii::$app->user->identity;
+        $post = $this->findPost($id);
+
+        if ($post->complain($currentUser))
+        {
+            return [
+                'success' => true,
+                'text' => 'Post reported'
+            ];
+        }
+        return [
+            'success' => false,
+            'text' => 'Error',
+        ];
     }
 
 }

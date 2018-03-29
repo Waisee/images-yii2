@@ -3,6 +3,7 @@
 namespace frontend\controllers;
 
 use Yii;
+use yii\web\Cookie;
 use yii\web\Controller;
 use frontend\models\User;
 
@@ -35,7 +36,7 @@ class SiteController extends Controller
         {
             return $this->redirect(['/user/default/login']);
         }
-        
+
         /*
          * @var @currentUser User
          */
@@ -45,18 +46,41 @@ class SiteController extends Controller
         $feedItems = $currentUser->getFeed($limit);
 
         return $this->render('index', [
-        
-            'feedItems' => $feedItems,
-            'currentUser' => $currentUser,
+                    'feedItems' => $feedItems,
+                    'currentUser' => $currentUser,
         ]);
     }
-    
+
     /**
      * About page
      */
-     public function actionAbout()
-     {
-         return $this->render('about');
-     }
+    public function actionAbout()
+    {
+        return $this->render('about');
+    }
+
+    /**
+     * Change language
+     * @return mixed
+     */
+    public function actionLanguage()
+    {
+
+        $language = Yii::$app->request->post('language');
+
+        if ($language === 'en-US' || 'ru-RU')
+        {
+            Yii::$app->language = $language;
+
+            $languageCookie = new Cookie([
+                'name' => 'language',
+                'value' => $language,
+                'expire' => time() + 60 * 60 * 24 * 30, // 30 days
+            ]);
+            Yii::$app->response->cookies->add($languageCookie);
+            return $this->redirect(Yii::$app->request->referrer);
+        }
+        return $this->redirect(Yii::$app->request->referrer);
+    }
 
 }
