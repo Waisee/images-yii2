@@ -52,19 +52,19 @@ use yii\helpers\Url;
                                 </a>
                             </div>
                             <div class="post-comments">
-                                <a href="#">
-                                    <?php if ($countComment = $post->countComments()): ?>
-                                        <span class="comments-count"><?php echo $countComment; ?></span> 
-                                    <?php else: ?>
-                                        <span class="comments-count"><?php echo 0; ?></span>
-                                    <?php endif; ?>  comments
-                                </a>
+                                <?php if ($countComment = $post->countComments()): ?>
+                                    <span class="comments-count"><?php echo $countComment; ?></span> 
+                                <?php else: ?>
+                                    <span class="comments-count"><?php echo 0; ?></span>
+                                <?php endif; ?>  comments
                             </div>
                             <div class="post-date">
                                 <span><?php echo Yii::$app->formatter->asDatetime($post->created_at); ?></span>    
                             </div>
                             <div class="post-report">
-                                <a href="#">Report post</a>    
+                                <a href="#" class="btn btn-default button-complain" data-id="<?php echo $post->id; ?>">
+                                    Report post<i class="fa fa-cog fa-spin fa-fw icon-preloader" style="display:none"></i>
+                                </a>    
                             </div>
                         </div>
                     </article>
@@ -87,7 +87,7 @@ use yii\helpers\Url;
                                     <?php foreach ($comments as $comment): ?>
                                         <li class="comment">
                                             <div class="comment-user-image">
-                                                <img src="<?php //echo $comment->user->getPicture(); ?>">
+                                                <img src="<?php //echo $comment->user->getPicture();   ?>">
                                             </div>
                                             <div class="comment-info">
                                                 <h4 class="author"><a href="<?php echo Url::to(['/user/profile/view', 'nickname' => ($comment->getUser()->getNickname()) ? $comment->getUser()->getNickname() : $comment->getUser()->getId()]); ?>">
@@ -138,5 +138,9 @@ use yii\helpers\Url;
 
 <?php
 $this->registerJsFile('@web/js/likes.js', [
+    'depends' => JqueryAsset::className(),
+]);
+
+$this->registerJsFile('@web/js/complaints.js', [
     'depends' => JqueryAsset::className(),
 ]);

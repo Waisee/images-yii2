@@ -51,13 +51,11 @@ $this->title = 'Newsfeed';
                                         </a>
                                     </div>
                                     <div class="post-comments">
-                                        <a href="#">
-                                            <?php if ($countComment = $feedItem->countComments()): ?>
-                                                <span class="comments-count"><?php echo $countComment; ?></span> 
-                                            <?php else: ?>
-                                                <span class="comments-count"><?php echo 0; ?></span>
-                                            <?php endif; ?> comments
-                                        </a>
+                                        <?php if ($countComment = $feedItem->countComments()): ?>
+                                            <span class="comments-count"><?php echo $countComment; ?></span> 
+                                        <?php else: ?>
+                                            <span class="comments-count"><?php echo 0; ?></span>
+                                        <?php endif; ?> comments
                                     </div>
                                     <div class="post-date">
                                         <span><?php echo Yii::$app->formatter->asDatetime($feedItem->post_created_at); ?></span>    
